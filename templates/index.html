@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间咖啡馆 - AI 文字冒险</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- header -->
+        <div class="header">
+            <h1>时间咖啡馆</h1>
+        </div>
+
+        <div class="main-content">
+
+            <!-- 故事区 -->
+            <div class="story-section">
+
+                <!-- story -->
+                <div class="story-box">
+                    <!-- 上方图片 -->
+                    <div id="image-container">
+                        <!-- loading -->
+                        <div id="image-loading" style="display:none;">图片生成中<span id="image-dots"></span></div>
+                        <!-- image -->
+                        <img id="story-image" src="" alt="场景图片" class="story-image" style="display:none;">
+                    </div>
+
+                    <!-- 下方文字 -->
+                    <div class="story-content">
+                        <p class="story-text">{{ story.text }}</p>
+                        <p id="loading-dots" style="display:none;">正在生成<span id="dots"></span></p>
+                    </div>
+                </div>
+
+                <!-- 分支 -->
+                <div class="branch-question">
+                    <h2>你想如何回应？</h2>
+                    <div class="branch-options">
+                        {% for option in story.options %}
+                        <form method="post" action="/next_step" onsubmit="startLoading()">
+                            <input type="hidden" name="branch_choice" value="{{ option }}">
+                            <button type="submit" class="branch-option">{{ option }}</button>
+                        </form>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 人物区 -->
+            <div class="character-section">
+                <h2>人物介绍</h2>
+                <div class="character-list">
+                    {% for c in characters %}
+                    <div class="character-item" onclick="openCharacterModal('{{ c.id }}')">
+                        <div class="character-header">
+                            <div class="character-avatar">
+                                <img src="{{ c.avatar }}" alt="{{ c.name }}">
+                            </div>
+                            <div class="character-name">{{ c.name }}</div>
+                        </div>
+                        <div class="character-description">{{ c.desc }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 自由输入 -->
+        <div class="input-section">
+            <form class="input-form" method="post" action="/next_step" onsubmit="startLoading()">
+                <input type="text" class="input-field" name="player_input" placeholder="输入你的回应...">
+                <button type="submit" class="input-button">发送</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- 人物详情 modal -->
+    <div id="character-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeCharacterModal()">×</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- 前端脚本 -->
+    <script>
+        const characters = {{ characters | tojson }};
+
+        // modal
+        function openCharacterModal(characterId) {
+            const c = characters.find(x => x.id === characterId);
+            document.getElementById('modal-body').innerHTML = `
+                <h3>${c.name}</h3>
+                <img src="${c.avatar}" style="width:100px; height:100px; border-radius:10px; margin: 10px auto; display:block; border:3px solid #8B5A2B;">
+                <p>${c.detail}</p>
+                <h4>相关事件</h4>
+                <ul>${c.events.map(e => `<li>${e}</li>`).join('')}</ul>
+            `;
+            document.getElementById('character-modal').style.display = 'flex';
+        }
+
+        function closeCharacterModal() {
+            document.getElementById('character-modal').style.display = 'none';
+        }
+
+        // 动态省略号
+        function startLoading() {
+            const loadingDots = document.getElementById('loading-dots');
+            loadingDots.style.display = 'block';
+            let dotCount = 0;
+            loadingDots.timer = setInterval(() => {
+                dotCount = (dotCount + 1) % 4;
+                document.getElementById('dots').textContent = '.'.repeat(dotCount);
+            }, 500);
+        }
+
+        function stopLoading() {
+            const loadingDots = document.getElementById('loading-dots');
+            clearInterval(loadingDots.timer);
+            loadingDots.style.display = 'none';
+        }
+
+        // 动态省略号（通用）
+        function startLoadingDots(id) {
+            const target = document.getElementById(id);
+            target.style.display = 'inline';
+            let dotCount = 0;
+            target.timer = setInterval(() => {
+                dotCount = (dotCount + 1) % 4;
+                target.innerText = '.'.repeat(dotCount);
+            }, 500);
+        }
+
+        function stopLoadingDots(id) {
+            const target = document.getElementById(id);
+            clearInterval(target.timer);
+            target.style.display = 'none';
+        }
+
+        // 异步图片轮询
+        {% if story.image_pending %}
+            function checkImage() {
+                document.getElementById("image-container").style.display = "flex";
+                document.getElementById("image-loading").style.display = "block";
+                startLoadingDots("image-dots");  // 图片 loading 省略号
+
+                fetch('/get_image')
+                .then(res => res.json())
+                .then(data => {
+                    if(data.image){
+                        const img = document.getElementById("story-image");
+                        img.src = data.image;
+                        img.onload = () => {
+                            stopLoadingDots("image-dots");
+                            document.getElementById("image-loading").style.display = "none";
+                            img.style.display = 'block';
+                            // 淡入效果
+                            img.style.opacity = 0;
+                            setTimeout(() => {
+                                img.style.transition = "opacity 0.5s ease-in-out";
+                                img.style.opacity = 1;
+                            }, 50);
+                        }
+                    } else {
+                        setTimeout(checkImage, 2000);
+                    }
+                });
+            }
+            setTimeout(checkImage, 1000);
+        {% else %}
+            document.getElementById("image-container").style.display = "none";
+        {% endif %}
+
+        // 添加音效
+        function addGameSounds() {
+            // 创建音效对象
+            const buttonClickSound = new Audio();
+            buttonClickSound.src = "{{ url_for('static', filename='sounds/click.mp3') }}";
+            buttonClickSound.volume = 0.5;
+
+            // 为所有按钮添加点击音效
+            const allButtons = document.querySelectorAll('button');
+            allButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    buttonClickSound.currentTime = 0;
+                    buttonClickSound.play();
+                });
+            });
+        }
+
+        // 页面加载完成后初始化音效
+        window.addEventListener('DOMContentLoaded', () => {
+            // 尝试加载音效（如果文件存在）
+            try {
+                addGameSounds();
+            } catch (e) {
+                console.log('音效文件可能不存在，跳过音效初始化');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

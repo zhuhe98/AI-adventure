@@ -1,0 +1,364 @@
+/* 基础样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f9fafb;
+  color: #1f2937;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部标题 */
+.header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* 主要内容区域 */
+.main-content {
+  display: flex;
+  flex: 1;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+/* 故事和分支问题区域 */
+.story-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+/* 故事内容 */
+.story-box {
+  flex: 1;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column; /* 保持垂直布局 */
+}
+
+/* 图像容器样式 */
+#image-container {
+  width: 100%;
+  min-height: 180px;
+  max-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid #eee;
+  background-color: #f7f8fa;
+  padding: 1rem;
+}
+
+/* 故事图片 */
+#story-image {
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: opacity 0.5s ease-in-out;
+}
+
+.story-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.story-text {
+  white-space: pre-wrap;
+  color: #374151;
+  line-height: 1.6;
+  font-size: 1.05rem;
+  text-align: justify;
+}
+
+/* 分支问题区域 */
+.branch-question {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.branch-question h2 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.branch-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.branch-option {
+  padding: 0.75rem 1.25rem;
+  background-color: #eef2ff;
+  color: #4f46e5;
+  border: 1px solid #e0e7ff;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.branch-option:hover {
+  background-color: #e0e7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+}
+
+/* 角色介绍区域 */
+.character-section {
+  width: 300px;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.character-section h2 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #1f2937;
+  text-align: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.character-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.character-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.character-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.character-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.character-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.character-name {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.character-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* 输入区域 */
+.input-section {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.input-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-field {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.input-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.input-button:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.25);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+
+  .character-section {
+    width: 100%;
+    max-height: 200px;
+  }
+
+  #image-container {
+    min-height: 150px;
+    max-height: 200px;
+  }
+
+  #story-image {
+    max-height: 180px;
+  }
+
+  .story-text {
+    font-size: 1rem;
+  }
+}
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #999;
+    transition: 0.3s;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+/* 鼠标悬停效果 */
+.character-item:hover {
+    background-color: #f3f4f6;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+/* 鼠标悬停时，人物名字变色 */
+.character-item:hover .character-name {
+    color: #4f46e5;
+}
+
+/* 图片加载样式 */
+#image-loading {
+    color: #6b7280;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* 淡入效果 */
+.story-box, .branch-question, .character-section, .input-section {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 历史文本和新文本样式 */
+.story-history, .story-text {
+    white-space: pre-wrap;
+    color: #374151;
+    line-height: 1.6;
+    font-size: 1.05rem;
+    text-align: justify;
+}
+
+.story-history {
+    margin-bottom: 1rem;
+    color: #4b5563; /* 略微浅一些的颜色，区分历史和新文本 */
+}

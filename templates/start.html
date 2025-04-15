@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间咖啡馆 - 冒险设置</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 3rem 1rem;
+            min-height: 100vh;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 480px;
+        }
+
+        .start-container {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .start-container h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+            transition: all 0.2s ease;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .start-button:hover {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 顶部标题 -->
+    <div class="logo">AI Adventure</div>
+    <div class="page-title">开启你的冒险故事</div>
+    <div class="page-subtitle">选择你喜欢的主题和风格，开启一段属于你的轻松冒险。</div>
+
+    <!-- 表单卡片 -->
+    <div class="start-container">
+        <h2>冒险设置</h2>
+        <form action="{{ url_for('start_game') }}" method="post" class="start-form">
+
+            <div class="form-group">
+                <label>选择冒险主题</label>
+                <select name="theme" required>
+                    <option value="coffee">时间咖啡馆</option>
+                    <option value="school">校园奇遇</option>
+                    <option value="fantasy">奇幻世界</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>故事风格</label>
+                <select name="style" required>
+                    <option value="relax">轻松治愈</option>
+                    <option value="mystery">神秘悬疑</option>
+                    <option value="adventure">刺激冒险</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>游戏难度</label>
+                <select name="difficulty" required>
+                    <option value="easy">简单</option>
+                    <option value="normal">普通</option>
+                    <option value="hard">困难</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>自定义开场（可选）</label>
+                <textarea name="custom_intro" rows="3" placeholder="我是一名时间旅行者，正在寻找失落的记忆..."></textarea>
+            </div>
+
+            <button type="submit" class="start-button">开始冒险</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
