@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # ----------- OpenAI API 配置 -----------
-API_KEY = "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"  # 替换成你的API Key
+API_KEY = ""  # 替换成你的API Key
 client = OpenAI(api_key=API_KEY)
 image_client = OpenAI(api_key=API_KEY)
 
@@ -39,6 +39,8 @@ def start_game():
 
 
 # ----------- 游戏主界面 -----------
+# 修改 app.py 中的 game 函数，添加历史记录支持
+
 @app.route('/game')
 def game():
     if not session.get('history'):
@@ -56,10 +58,37 @@ def game():
         session['story'] = first_story['text']
         if first_story.get('image_pending'):
             session['pending_image_prompt'] = first_story.get('image_content', '')
-    return render_template('index.html', story=session['history'][-1], characters=session.get('characters', []))
+
+    # 确保从session获取最新的记录
+    current_record = session['history'][-1] if session.get('history') else {}
+
+    # 获取最近的历史文本（最多3条，不包括当前记录）
+    recent_history = ""
+    if len(session.get('history', [])) > 1:
+        recent_records = session['history'][:-1][-3:]  # 最近的3条历史记录
+        recent_history = "\n\n".join([rec.get('new_text', '') for rec in recent_records])
+
+    # 转换记录格式为模板可用格式
+    story_for_template = {
+        'text': current_record.get('new_text', ''),
+        'history_text': recent_history,
+        'full_text': session.get('story', ''),  # 完整历史
+        'image': current_record.get('image'),
+        'image_pending': current_record.get('image_pending', False),
+        'options': current_record.get('options', [])
+    }
+
+    # 打印调试信息
+    print("传递给模板的数据:")
+    print("Story:", story_for_template)
+    print("Characters:", session.get('characters', []))
+
+    return render_template('index.html',
+                           story=story_for_template,
+                           characters=session.get('characters', []))
 
 
-# ----------- 玩家提交 -----------
+# 修改 next_step 函数中的返回部分
 @app.route('/next_step', methods=['POST'])
 def next_step():
     player_input = request.form.get('player_input')
@@ -115,8 +144,33 @@ def next_step():
         "player_action": user_action
     }
     session['history'].append(story_record)
-    print("Characters:", session.get('characters', []))
-    return render_template('index.html', story=story_record, characters=session.get('characters', []))
+
+    # 获取最近的历史文本（最多3条，不包括当前记录）
+    recent_history = ""
+    if len(session.get('history', [])) > 1:
+        recent_records = session['history'][:-1][-3:]  # 最近的3条历史记录
+        recent_history = "\n\n".join([rec.get('new_text', '') for rec in recent_records])
+
+    # 强制保存session
+    session.modified = True
+
+    # 打印调试信息
+    print("生成的记录:", story_record)
+    print("当前角色:", session.get('characters', []))
+
+    # 转换记录格式为模板可用格式
+    story_for_template = {
+        'text': story_record.get('new_text', ''),
+        'history_text': recent_history,
+        'full_text': session.get('story', ''),  # 完整历史
+        'image': story_record.get('image'),
+        'image_pending': story_record.get('image_pending', False),
+        'options': story_record.get('options', [])
+    }
+
+    return render_template('index.html',
+                           story=story_for_template,
+                           characters=session.get('characters', []))
 
 
 @app.route('/get_image')

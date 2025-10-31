@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>时间咖啡馆 - AI 文字冒险</title>
+    <title>星露谷时光咖啡馆 - 文字冒险</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
@@ -14,7 +14,7 @@
 
         <!-- header -->
         <div class="header">
-            <h1>时间咖啡馆</h1>
+            <h1>✧ 星露谷时光咖啡馆 ✧</h1>
         </div>
 
         <div class="main-content">
@@ -25,30 +25,41 @@
                 <!-- story -->
                 <div class="story-box">
                     <!-- 上方图片 -->
-                    <div id="image-container">
+                    <div id="image-container" style="display: {% if story.image_pending or story.image %}flex{% else %}none{% endif %};">
                         <!-- loading -->
-                        <div id="image-loading" style="display:none;">图片生成中<span id="image-dots"></span></div>
+                        <div id="image-loading" style="display:{% if story.image_pending %}block{% else %}none{% endif %};">图片生成中<span id="image-dots"></span></div>
                         <!-- image -->
-                        <img id="story-image" src="" alt="场景图片" class="story-image" style="display:none;">
+                        <img id="story-image" src="{{ story.image if story.image else '' }}" alt="场景图片" class="story-image pixel-art" style="display:{% if story.image %}block{% else %}none{% endif %};">
                     </div>
 
                     <!-- 下方文字 -->
                     <div class="story-content">
-                        <p class="story-text">{{ story.text }}</p>
+                        {% if story.history_text %}
+                        <p class="story-history">{{ story.history_text }}</p>
+                        <hr class="history-divider">
+                        {% endif %}
+                        <p class="story-text">{{ story.text if story.text else '欢迎来到星露谷时光咖啡馆，这里的故事正等待你的探索...' }}</p>
                         <p id="loading-dots" style="display:none;">正在生成<span id="dots"></span></p>
                     </div>
                 </div>
 
                 <!-- 分支 -->
                 <div class="branch-question">
-                    <h2>你想如何回应？</h2>
+                    <h2>✦ 你想如何回应？ ✦</h2>
                     <div class="branch-options">
-                        {% for option in story.options %}
-                        <form method="post" action="/next_step" onsubmit="startLoading()">
-                            <input type="hidden" name="branch_choice" value="{{ option }}">
-                            <button type="submit" class="branch-option">{{ option }}</button>
-                        </form>
-                        {% endfor %}
+                        {% if story.options and story.options|length > 0 %}
+                            {% for option in story.options %}
+                            <form method="post" action="/next_step" onsubmit="startLoading()">
+                                <input type="hidden" name="branch_choice" value="{{ option }}">
+                                <button type="submit" class="branch-option">{{ option }}</button>
+                            </form>
+                            {% endfor %}
+                        {% else %}
+                            <form method="post" action="/next_step" onsubmit="startLoading()">
+                                <input type="hidden" name="branch_choice" value="等待给出选项">
+                                <button type="submit" class="branch-option">等待给出选项</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -56,19 +67,31 @@
 
             <!-- 人物区 -->
             <div class="character-section">
-                <h2>人物介绍</h2>
+                <h2>✦ 人物介绍 ✦</h2>
                 <div class="character-list">
-                    {% for c in characters %}
-                    <div class="character-item" onclick="openCharacterModal('{{ c.id }}')">
-                        <div class="character-header">
-                            <div class="character-avatar">
-                                <img src="{{ c.avatar }}" alt="{{ c.name }}">
+                    {% if characters and characters|length > 0 %}
+                        {% for c in characters %}
+                        <div class="character-item" onclick="openCharacterModal('{{ c.id }}')">
+                            <div class="character-header">
+                                <div class="character-avatar">
+                                    <img src="{{ c.avatar }}" alt="{{ c.name }}" class="pixel-art">
+                                </div>
+                                <div class="character-name">{{ c.name }}</div>
                             </div>
-                            <div class="character-name">{{ c.name }}</div>
+                            <div class="character-description">{{ c.desc }}</div>
                         </div>
-                        <div class="character-description">{{ c.desc }}</div>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="character-item">
+                            <div class="character-header">
+                                <div class="character-avatar">
+                                    <img src="/api/placeholder/100/100" alt="未知角色" class="pixel-art">
+                                </div>
+                                <div class="character-name">暂无角色</div>
+                            </div>
+                            <div class="character-description">随着故事的发展，你将会遇到各种有趣的角色...</div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -82,6 +105,16 @@
             </form>
         </div>
 
+        <!-- 游戏控制 -->
+        <div class="game-controls">
+            <div class="control-buttons">
+                <button class="control-button" onclick="toggleHistory()">历史记录</button>
+            </div>
+            <div class="game-menu">
+                <button class="menu-button" onclick="toggleGameMenu()">菜单</button>
+            </div>
+        </div>
+
     </div>
 
     <!-- 人物详情 modal -->
@@ -92,120 +125,43 @@
         </div>
     </div>
 
-    <!-- 前端脚本 -->
+    <!-- 游戏菜单 modal -->
+    <div id="game-menu-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeGameMenu()">×</span>
+            <h3>✧ 游戏菜单 ✧</h3>
+            <div class="menu-buttons">
+                <button class="menu-option">存档</button>
+                <button class="menu-option">读档</button>
+                <button class="menu-option">设置</button>
+                <button class="menu-option" onclick="location.href='/'">回到标题</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 历史记录 modal -->
+    <div id="history-modal" class="modal" style="display:none;">
+        <div class="modal-content history-modal-content">
+            <span class="close-button" onclick="closeHistoryModal()">×</span>
+            <h3>✧ 故事历史 ✧</h3>
+            <div class="history-container">
+                <p class="full-history">{{ story.full_text if story.full_text else '故事才刚刚开始...' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入外部 JavaScript 文件 -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
     <script>
-        const characters = {{ characters | tojson }};
+        // 使用外部JS文件中定义的初始化函数
+        window.addEventListener('DOMContentLoaded', function() {
+            // 将后端传递的数据转为 JSON 字符串传递给 JS 函数
+            const charactersData = {{ characters|tojson|safe }};
+            const storyData = {{ story|tojson|safe }};
+            const imagePending = {% if story and story.image_pending %}true{% else %}false{% endif %};
 
-        // modal
-        function openCharacterModal(characterId) {
-            const c = characters.find(x => x.id === characterId);
-            document.getElementById('modal-body').innerHTML = `
-                <h3>${c.name}</h3>
-                <img src="${c.avatar}" style="width:100px; height:100px; border-radius:10px; margin: 10px auto; display:block; border:3px solid #8B5A2B;">
-                <p>${c.detail}</p>
-                <h4>相关事件</h4>
-                <ul>${c.events.map(e => `<li>${e}</li>`).join('')}</ul>
-            `;
-            document.getElementById('character-modal').style.display = 'flex';
-        }
-
-        function closeCharacterModal() {
-            document.getElementById('character-modal').style.display = 'none';
-        }
-
-        // 动态省略号
-        function startLoading() {
-            const loadingDots = document.getElementById('loading-dots');
-            loadingDots.style.display = 'block';
-            let dotCount = 0;
-            loadingDots.timer = setInterval(() => {
-                dotCount = (dotCount + 1) % 4;
-                document.getElementById('dots').textContent = '.'.repeat(dotCount);
-            }, 500);
-        }
-
-        function stopLoading() {
-            const loadingDots = document.getElementById('loading-dots');
-            clearInterval(loadingDots.timer);
-            loadingDots.style.display = 'none';
-        }
-
-        // 动态省略号（通用）
-        function startLoadingDots(id) {
-            const target = document.getElementById(id);
-            target.style.display = 'inline';
-            let dotCount = 0;
-            target.timer = setInterval(() => {
-                dotCount = (dotCount + 1) % 4;
-                target.innerText = '.'.repeat(dotCount);
-            }, 500);
-        }
-
-        function stopLoadingDots(id) {
-            const target = document.getElementById(id);
-            clearInterval(target.timer);
-            target.style.display = 'none';
-        }
-
-        // 异步图片轮询
-        {% if story.image_pending %}
-            function checkImage() {
-                document.getElementById("image-container").style.display = "flex";
-                document.getElementById("image-loading").style.display = "block";
-                startLoadingDots("image-dots");  // 图片 loading 省略号
-
-                fetch('/get_image')
-                .then(res => res.json())
-                .then(data => {
-                    if(data.image){
-                        const img = document.getElementById("story-image");
-                        img.src = data.image;
-                        img.onload = () => {
-                            stopLoadingDots("image-dots");
-                            document.getElementById("image-loading").style.display = "none";
-                            img.style.display = 'block';
-                            // 淡入效果
-                            img.style.opacity = 0;
-                            setTimeout(() => {
-                                img.style.transition = "opacity 0.5s ease-in-out";
-                                img.style.opacity = 1;
-                            }, 50);
-                        }
-                    } else {
-                        setTimeout(checkImage, 2000);
-                    }
-                });
-            }
-            setTimeout(checkImage, 1000);
-        {% else %}
-            document.getElementById("image-container").style.display = "none";
-        {% endif %}
-
-        // 添加音效
-        function addGameSounds() {
-            // 创建音效对象
-            const buttonClickSound = new Audio();
-            buttonClickSound.src = "{{ url_for('static', filename='sounds/click.mp3') }}";
-            buttonClickSound.volume = 0.5;
-
-            // 为所有按钮添加点击音效
-            const allButtons = document.querySelectorAll('button');
-            allButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    buttonClickSound.currentTime = 0;
-                    buttonClickSound.play();
-                });
-            });
-        }
-
-        // 页面加载完成后初始化音效
-        window.addEventListener('DOMContentLoaded', () => {
-            // 尝试加载音效（如果文件存在）
-            try {
-                addGameSounds();
-            } catch (e) {
-                console.log('音效文件可能不存在，跳过音效初始化');
-            }
+            // 调用初始化函数
+            initializeGame(charactersData, storyData, imagePending);
         });
     </script>
 

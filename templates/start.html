@@ -4,11 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>时间咖啡馆 - 冒险设置</title>
+    <title>星露谷时光咖啡馆 - 冒险设置</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
-            background: #f9fafb;
+            background-color: #f0e6c8; /* 淡淡的牛皮纸颜色 */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVQImWNgYGD4z0AswK4SAFXuAf8EPy+xAAAAAElFTkSuQmCC');
+            background-repeat: repeat;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,22 +21,28 @@
         }
 
         .logo {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #4f46e5;
-            margin-bottom: 0.5rem;
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            font-weight: normal;
+            color: #5c3e24;
+            margin-bottom: 0.75rem;
+            text-shadow: 2px 2px 0 #f6ecd9;
         }
 
         .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
+            font-family: 'VT323', monospace;
+            font-size: 2.5rem;
+            font-weight: normal;
+            color: #5c3e24;
+            margin-bottom: 0.75rem;
+            text-shadow: 3px 3px 0 #f6ecd9;
+            letter-spacing: 2px;
         }
 
         .page-subtitle {
-            font-size: 1rem;
-            color: #6b7280;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            color: #7d5c38;
             margin-bottom: 2rem;
             text-align: center;
             max-width: 480px;
@@ -42,19 +51,25 @@
         .start-container {
             width: 100%;
             max-width: 480px;
-            background: white;
-            border-radius: 1rem;
+            background: #f6ecd9;
+            border-radius: 0;
             padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 6px 0 #5c3e24;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
+            border: 4px solid #5c3e24;
         }
 
         .start-container h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #374151;
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            font-weight: normal;
+            color: #5c3e24;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px dashed #cfb991;
         }
 
         .form-group {
@@ -64,81 +79,135 @@
         }
 
         .form-group label {
-            font-weight: 500;
-            color: #374151;
+            font-family: 'VT323', monospace;
+            font-weight: normal;
+            font-size: 1.2rem;
+            color: #5c3e24;
         }
 
         .form-group select,
         .form-group textarea {
             padding: 0.75rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.5rem;
-            background-color: #f9fafb;
+            border: 3px solid #7d5c38;
+            border-radius: 0;
+            background-color: #e9daba;
             transition: all 0.2s ease;
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            color: #5c3e24;
         }
 
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+            border-color: #8dc267;
+            box-shadow: 0 0 0 2px rgba(141, 194, 103, 0.25);
+        }
+
+        .option-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
         }
 
         .start-button {
             width: 100%;
             padding: 0.75rem;
-            margin-top: 0.5rem;
-            background-color: #4f46e5;
-            color: white;
+            margin-top: 1rem;
+            background-color: #8dc267; /* 星露谷的草绿色 */
+            color: #f6ecd9;
             border: none;
-            border-radius: 0.5rem;
-            font-weight: 500;
+            border-radius: 0;
+            border-bottom: 4px solid #5c8c3e;
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            font-weight: normal;
             cursor: pointer;
             transition: all 0.2s ease;
+            text-shadow: 2px 2px 0 #3b591f;
+            letter-spacing: 1px;
         }
 
         .start-button:hover {
-            background-color: #4338ca;
+            background-color: #a4d678;
+            transform: translateY(-3px);
+            border-bottom-width: 6px;
+        }
+
+        .start-button:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        /* 装饰性元素 */
+        .pixel-decoration {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .pixel-decoration::before,
+        .pixel-decoration::after {
+            content: "✦✦✦";
+            font-size: 1.5rem;
+            color: #7d5c38;
+            letter-spacing: 10px;
+            text-shadow: 2px 2px 0 #f6ecd9;
+        }
+
+        /* 动画效果 */
+        @keyframes pixel-float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .pixel-animation {
+            animation: pixel-float 3s ease-in-out infinite;
         }
     </style>
 </head>
 
 <body>
 
+    <!-- 像素装饰 -->
+    <div class="pixel-decoration"></div>
+
     <!-- 顶部标题 -->
-    <div class="logo">AI Adventure</div>
-    <div class="page-title">开启你的冒险故事</div>
-    <div class="page-subtitle">选择你喜欢的主题和风格，开启一段属于你的轻松冒险。</div>
+    <div class="logo pixel-animation">Stardew Valley Style</div>
+    <div class="page-title">✧ 星露谷时光咖啡馆 ✧</div>
+    <div class="page-subtitle">选择你喜欢的主题和风格，开启一段属于你的像素冒险。</div>
 
     <!-- 表单卡片 -->
     <div class="start-container">
-        <h2>冒险设置</h2>
+        <h2>✦ 冒险设置 ✦</h2>
         <form action="{{ url_for('start_game') }}" method="post" class="start-form">
 
             <div class="form-group">
                 <label>选择冒险主题</label>
                 <select name="theme" required>
-                    <option value="coffee">时间咖啡馆</option>
-                    <option value="school">校园奇遇</option>
-                    <option value="fantasy">奇幻世界</option>
+                    <option value="coffee">🍵 时间咖啡馆</option>
+                    <option value="school">🏫 校园奇遇</option>
+                    <option value="fantasy">🌟 奇幻世界</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label>故事风格</label>
                 <select name="style" required>
-                    <option value="relax">轻松治愈</option>
-                    <option value="mystery">神秘悬疑</option>
-                    <option value="adventure">刺激冒险</option>
+                    <option value="relax">🍃 轻松治愈</option>
+                    <option value="mystery">🔍 神秘悬疑</option>
+                    <option value="adventure">⚔️ 刺激冒险</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label>游戏难度</label>
                 <select name="difficulty" required>
-                    <option value="easy">简单</option>
-                    <option value="normal">普通</option>
-                    <option value="hard">困难</option>
+                    <option value="easy">🌱 简单</option>
+                    <option value="normal">🌿 普通</option>
+                    <option value="hard">🌳 困难</option>
                 </select>
             </div>
 
@@ -150,6 +219,48 @@
             <button type="submit" class="start-button">开始冒险</button>
         </form>
     </div>
+
+    <!-- 像素装饰 -->
+    <div class="pixel-decoration" style="margin-top: 2rem;"></div>
+
+    <script>
+        // 为下拉选项添加动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                select.addEventListener('focus', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.borderColor = '#8dc267';
+                });
+
+                select.addEventListener('blur', function() {
+                    this.style.transform = 'scale(1)';
+                    if (!this.value) {
+                        this.style.borderColor = '#7d5c38';
+                    }
+                });
+
+                // 当选择改变时
+                select.addEventListener('change', function() {
+                    // 添加轻微的动画效果
+                    this.style.backgroundColor = '#e0d2a0';
+                    setTimeout(() => {
+                        this.style.backgroundColor = '#e9daba';
+                    }, 300);
+                });
+            });
+
+            // 为开始按钮添加额外的动画效果
+            const startButton = document.querySelector('.start-button');
+            startButton.addEventListener('mouseover', function() {
+                this.style.letterSpacing = '2px';
+            });
+
+            startButton.addEventListener('mouseout', function() {
+                this.style.letterSpacing = '1px';
+            });
+        });
+    </script>
 
 </body>
 
