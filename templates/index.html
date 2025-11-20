@@ -1,170 +1,192 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="{{ language }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星露谷时光咖啡馆 - 文字冒险</title>
+    <title>{{ ui.title }} - {{ ui.subtitle }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
-
-        <!-- header -->
-        <div class="header">
-            <h1>✧ 星露谷时光咖啡馆 ✧</h1>
-        </div>
+        <!-- Header -->
+        <header class="header">
+            <h1>✧ {{ ui.title }} ✧</h1>
+        </header>
 
         <div class="main-content">
-
-            <!-- 故事区 -->
+            <!-- Left Column: Story & Interaction -->
             <div class="story-section">
 
-                <!-- story -->
-                <div class="story-box">
-                    <!-- 上方图片 -->
-                    <div id="image-container" style="display: {% if story.image_pending or story.image %}flex{% else %}none{% endif %};">
-                        <!-- loading -->
-                        <div id="image-loading" style="display:{% if story.image_pending %}block{% else %}none{% endif %};">图片生成中<span id="image-dots"></span></div>
-                        <!-- image -->
-                        <img id="story-image" src="{{ story.image if story.image else '' }}" alt="场景图片" class="story-image pixel-art" style="display:{% if story.image %}block{% else %}none{% endif %};">
+                <!-- Story Box -->
+                <div class="pixel-box">
+                    <!-- Image Area -->
+                    <div id="image-container" class="image-frame"
+                        style="display: {% if story.image_pending or story.image %}flex{% else %}none{% endif %};">
+                        <div id="image-loading" class="loading-overlay"
+                            style="display:{% if story.image_pending %}flex{% else %}none{% endif %};">
+                            <span>{{ ui.image_loading }}<span id="image-dots">...</span></span>
+                        </div>
+                        <img id="story-image" src="{{ story.image if story.image else '' }}" alt="场景图片"
+                            class="story-image" style="display:{% if story.image %}block{% else %}none{% endif %};">
                     </div>
 
-                    <!-- 下方文字 -->
-                    <div class="story-content">
+                    <!-- Text Area -->
+                    <div class="story-text-box">
                         {% if story.history_text %}
-                        <p class="story-history">{{ story.history_text }}</p>
-                        <hr class="history-divider">
+                        <div class="history-text">{{ story.history_text }}</div>
                         {% endif %}
-                        <p class="story-text">{{ story.text if story.text else '欢迎来到星露谷时光咖啡馆，这里的故事正等待你的探索...' }}</p>
-                        <p id="loading-dots" style="display:none;">正在生成<span id="dots"></span></p>
+                        <p class="story-text">{{ story.text if story.text else '...' }}</p>
+                        <p id="loading-dots" style="display:none; color: var(--accent-color);">{{ ui.loading_text
+                            }}<span id="dots">...</span></p>
                     </div>
                 </div>
 
-                <!-- 分支 -->
-                <div class="branch-question">
-                    <h2>✦ 你想如何回应？ ✦</h2>
-                    <div class="branch-options">
+                <!-- Branch Options -->
+                <div class="pixel-box branch-section">
+                    <h2>{{ ui.response_prompt if story.options else ui.wait_option }}</h2>
+                    <div class="options-grid">
                         {% if story.options and story.options|length > 0 %}
-                            {% for option in story.options %}
-                            <form method="post" action="/next_step" onsubmit="startLoading()">
-                                <input type="hidden" name="branch_choice" value="{{ option }}">
-                                <button type="submit" class="branch-option">{{ option }}</button>
-                            </form>
-                            {% endfor %}
+                        {% for option in story.options %}
+                        <form method="post" action="/next_step" onsubmit="startLoading()">
+                            <input type="hidden" name="branch_choice" value="{{ option }}">
+                            <button type="submit" class="btn">{{ option }}</button>
+                        </form>
+                        {% endfor %}
                         {% else %}
-                            <form method="post" action="/next_step" onsubmit="startLoading()">
-                                <input type="hidden" name="branch_choice" value="等待给出选项">
-                                <button type="submit" class="branch-option">等待给出选项</button>
-                            </form>
+                        <form method="post" action="/next_step" onsubmit="startLoading()">
+                            <input type="hidden" name="branch_choice" value="{{ ui.wait_option }}">
+                            <button type="submit" class="btn btn-secondary">{{ ui.wait_option }}</button>
+                        </form>
                         {% endif %}
                     </div>
+                </div>
+
+                <!-- Free Input -->
+                <div class="pixel-box">
+                    <form class="input-area" method="post" action="/next_step" onsubmit="startLoading()">
+                        <input type="text" class="pixel-input" name="player_input"
+                            placeholder="{{ ui.input_placeholder }}">
+                        <button type="submit" class="btn" style="width: auto;">{{ ui.send_btn }}</button>
+                    </form>
                 </div>
 
             </div>
 
-            <!-- 人物区 -->
-            <div class="character-section">
-                <h2>✦ 人物介绍 ✦</h2>
-                <div class="character-list">
-                    {% if characters and characters|length > 0 %}
+            <!-- Right Column: Characters & Status -->
+            <div class="character-panel">
+                <div class="pixel-box">
+                    <h2 style="text-align: center; margin-bottom: 1rem; color: var(--secondary-color);">{{
+                        ui.characters_title }}</h2>
+                    <div class="character-list">
+                        {% if characters and characters|length > 0 %}
                         {% for c in characters %}
-                        <div class="character-item" onclick="openCharacterModal('{{ c.id }}')">
-                            <div class="character-header">
-                                <div class="character-avatar">
-                                    <img src="{{ c.avatar }}" alt="{{ c.name }}" class="pixel-art">
-                                </div>
-                                <div class="character-name">{{ c.name }}</div>
+                        <div class="character-card" onclick="openCharacterModal('{{ c.id }}')">
+                            <div class="char-avatar">
+                                <img src="{{ c.avatar }}" alt="{{ c.name }}"
+                                    style="width:100%; height:100%; object-fit:cover;">
                             </div>
-                            <div class="character-description">{{ c.desc }}</div>
+                            <div class="char-info">
+                                <h3>{{ c.name }}</h3>
+                                <p>{{ c.desc[:20] }}...</p>
+                            </div>
                         </div>
                         {% endfor %}
-                    {% else %}
-                        <div class="character-item">
-                            <div class="character-header">
-                                <div class="character-avatar">
-                                    <img src="/api/placeholder/100/100" alt="未知角色" class="pixel-art">
-                                </div>
-                                <div class="character-name">暂无角色</div>
-                            </div>
-                            <div class="character-description">随着故事的发展，你将会遇到各种有趣的角色...</div>
-                        </div>
-                    {% endif %}
+                        {% else %}
+                        <div style="text-align: center; color: #999; padding: 1rem;">{{ ui.no_characters }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="pixel-box">
+                    <div class="game-controls"
+                        style="border:none; padding:0; margin:0; flex-direction: column; gap: 0.5rem;">
+                        <button class="btn btn-secondary" onclick="toggleHistory()">{{ ui.history_btn }}</button>
+                        <button class="btn btn-secondary" onclick="toggleGameMenu()">{{ ui.menu_btn }}</button>
+                    </div>
                 </div>
             </div>
-
         </div>
-
-        <!-- 自由输入 -->
-        <div class="input-section">
-            <form class="input-form" method="post" action="/next_step" onsubmit="startLoading()">
-                <input type="text" class="input-field" name="player_input" placeholder="输入你的回应...">
-                <button type="submit" class="input-button">发送</button>
-            </form>
-        </div>
-
-        <!-- 游戏控制 -->
-        <div class="game-controls">
-            <div class="control-buttons">
-                <button class="control-button" onclick="toggleHistory()">历史记录</button>
-            </div>
-            <div class="game-menu">
-                <button class="menu-button" onclick="toggleGameMenu()">菜单</button>
-            </div>
-        </div>
-
     </div>
 
-    <!-- 人物详情 modal -->
-    <div id="character-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeCharacterModal()">×</span>
+    <!-- Modals -->
+    <!-- Character Modal -->
+    <div id="character-modal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeCharacterModal()">{{ ui.close_btn }}</button>
             <div id="modal-body"></div>
         </div>
     </div>
 
-    <!-- 游戏菜单 modal -->
-    <div id="game-menu-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeGameMenu()">×</span>
-            <h3>✧ 游戏菜单 ✧</h3>
-            <div class="menu-buttons">
-                <button class="menu-option">存档</button>
-                <button class="menu-option">读档</button>
-                <button class="menu-option">设置</button>
-                <button class="menu-option" onclick="location.href='/'">回到标题</button>
+    <!-- Game Menu Modal -->
+    <div id="game-menu-modal" class="modal-overlay">
+        <div class="modal-box" style="text-align: center;">
+            <button class="close-btn" onclick="closeGameMenu()">{{ ui.close_btn }}</button>
+            <h2 style="margin-bottom: 2rem; color: var(--secondary-color);">{{ ui.menu_title }}</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 300px; margin: 0 auto;">
+                <button class="btn" onclick="showSaveDialog()">{{ ui.save_btn }}</button>
+                <button class="btn" onclick="showLoadDialog()">{{ ui.load_btn }}</button>
+                <button class="btn">{{ ui.settings_btn }}</button>
+                <button class="btn btn-secondary" onclick="location.href='/'">{{ ui.home_btn }}</button>
             </div>
         </div>
     </div>
 
-    <!-- 历史记录 modal -->
-    <div id="history-modal" class="modal" style="display:none;">
-        <div class="modal-content history-modal-content">
-            <span class="close-button" onclick="closeHistoryModal()">×</span>
-            <h3>✧ 故事历史 ✧</h3>
-            <div class="history-container">
-                <p class="full-history">{{ story.full_text if story.full_text else '故事才刚刚开始...' }}</p>
+    <!-- History Modal -->
+    <div id="history-modal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="close-btn" onclick="closeHistoryModal()">{{ ui.close_btn }}</button>
+            <h2 style="margin-bottom: 1rem; color: var(--secondary-color);">{{ ui.history_title }}</h2>
+            <div style="white-space: pre-wrap; line-height: 1.8; color: var(--text-color);">
+                {{ story.full_text if story.full_text else '...' }}
             </div>
         </div>
     </div>
 
-    <!-- 引入外部 JavaScript 文件 -->
+    <!-- Save Dialog Modal -->
+    <div id="save-dialog" class="modal-overlay">
+        <div class="modal-box" style="max-width: 400px;">
+            <button class="close-btn" onclick="closeSaveDialog()">{{ ui.close_btn }}</button>
+            <h2 style="margin-bottom: 1.5rem; color: var(--secondary-color);">{{ ui.save_btn }}</h2>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; color: var(--text-color);">
+                    {% if language == 'zh' %}存档名称：{% else %}セーブ名：{% endif %}
+                </label>
+                <input type="text" id="save-name-input" class="pixel-input"
+                    placeholder="{% if language == 'zh' %}输入存档名称（可选）{% else %}名前を入力（任意）{% endif %}"
+                    style="width: 100%;">
+            </div>
+            <button class="btn" onclick="doSave()" style="width: 100%;">
+                {% if language == 'zh' %}确认存档{% else %}保存{% endif %}
+            </button>
+        </div>
+    </div>
+
+    <!-- Load Dialog Modal -->
+    <div id="load-dialog" class="modal-overlay">
+        <div class="modal-box" style="max-width: 500px;">
+            <button class="close-btn" onclick="closeLoadDialog()">{{ ui.close_btn }}</button>
+            <h2 style="margin-bottom: 1.5rem; color: var(--secondary-color);">{{ ui.load_btn }}</h2>
+            <div id="save-list" style="max-height: 400px; overflow-y: auto;">
+                <!-- Save list will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     <script>
-        // 使用外部JS文件中定义的初始化函数
-        window.addEventListener('DOMContentLoaded', function() {
-            // 将后端传递的数据转为 JSON 字符串传递给 JS 函数
-            const charactersData = {{ characters|tojson|safe }};
-            const storyData = {{ story|tojson|safe }};
-            const imagePending = {% if story and story.image_pending %}true{% else %}false{% endif %};
-
-            // 调用初始化函数
-            initializeGame(charactersData, storyData, imagePending);
+        window.addEventListener('DOMContentLoaded', function () {
+            const charactersData = {{ characters| tojson | safe
+        }};
+        const storyData = {{ story| tojson | safe }};
+        const imagePending = {% if story and story.image_pending %}true{% else %} false{% endif %};
+        const uiTranslations = {{ ui | tojson | safe }};
+        initializeGame(charactersData, storyData, imagePending, uiTranslations);
         });
     </script>
-
 </body>
 
 </html>

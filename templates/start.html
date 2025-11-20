@@ -7,261 +7,261 @@
     <title>星露谷时光咖啡馆 - 冒险设置</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f0e6c8; /* 淡淡的牛皮纸颜色 */
-            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVQImWNgYGD4z0AswK4SAFXuAf8EPy+xAAAAAElFTkSuQmCC');
-            background-repeat: repeat;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 3rem 1rem;
-            min-height: 100vh;
-        }
-
-        .logo {
-            font-family: 'VT323', monospace;
-            font-size: 1.5rem;
-            font-weight: normal;
-            color: #5c3e24;
-            margin-bottom: 0.75rem;
-            text-shadow: 2px 2px 0 #f6ecd9;
-        }
-
-        .page-title {
-            font-family: 'VT323', monospace;
-            font-size: 2.5rem;
-            font-weight: normal;
-            color: #5c3e24;
-            margin-bottom: 0.75rem;
-            text-shadow: 3px 3px 0 #f6ecd9;
-            letter-spacing: 2px;
-        }
-
-        .page-subtitle {
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
-            color: #7d5c38;
-            margin-bottom: 2rem;
-            text-align: center;
-            max-width: 480px;
-        }
-
-        .start-container {
-            width: 100%;
-            max-width: 480px;
-            background: #f6ecd9;
-            border-radius: 0;
-            padding: 2rem;
-            box-shadow: 0 6px 0 #5c3e24;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            border: 4px solid #5c3e24;
-        }
-
-        .start-container h2 {
-            font-family: 'VT323', monospace;
-            font-size: 1.5rem;
-            font-weight: normal;
-            color: #5c3e24;
-            text-align: center;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px dashed #cfb991;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            font-family: 'VT323', monospace;
-            font-weight: normal;
-            font-size: 1.2rem;
-            color: #5c3e24;
-        }
-
-        .form-group select,
-        .form-group textarea {
-            padding: 0.75rem;
-            border: 3px solid #7d5c38;
-            border-radius: 0;
-            background-color: #e9daba;
-            transition: all 0.2s ease;
-            font-family: 'VT323', monospace;
-            font-size: 1.1rem;
-            color: #5c3e24;
-        }
-
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #8dc267;
-            box-shadow: 0 0 0 2px rgba(141, 194, 103, 0.25);
-        }
-
-        .option-icon {
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
-        }
-
-        .start-button {
-            width: 100%;
-            padding: 0.75rem;
-            margin-top: 1rem;
-            background-color: #8dc267; /* 星露谷的草绿色 */
-            color: #f6ecd9;
-            border: none;
-            border-radius: 0;
-            border-bottom: 4px solid #5c8c3e;
-            font-family: 'VT323', monospace;
-            font-size: 1.3rem;
-            font-weight: normal;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-shadow: 2px 2px 0 #3b591f;
-            letter-spacing: 1px;
-        }
-
-        .start-button:hover {
-            background-color: #a4d678;
-            transform: translateY(-3px);
-            border-bottom-width: 6px;
-        }
-
-        .start-button:active {
-            transform: translateY(2px);
-            border-bottom-width: 2px;
-        }
-
-        /* 装饰性元素 */
-        .pixel-decoration {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .pixel-decoration::before,
-        .pixel-decoration::after {
-            content: "✦✦✦";
-            font-size: 1.5rem;
-            color: #7d5c38;
-            letter-spacing: 10px;
-            text-shadow: 2px 2px 0 #f6ecd9;
-        }
-
-        /* 动画效果 */
-        @keyframes pixel-float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0); }
-        }
-
-        .pixel-animation {
-            animation: pixel-float 3s ease-in-out infinite;
-        }
-    </style>
 </head>
 
 <body>
-
-    <!-- 像素装饰 -->
-    <div class="pixel-decoration"></div>
-
-    <!-- 顶部标题 -->
-    <div class="logo pixel-animation">Stardew Valley Style</div>
-    <div class="page-title">✧ 星露谷时光咖啡馆 ✧</div>
-    <div class="page-subtitle">选择你喜欢的主题和风格，开启一段属于你的像素冒险。</div>
-
-    <!-- 表单卡片 -->
-    <div class="start-container">
-        <h2>✦ 冒险设置 ✦</h2>
-        <form action="{{ url_for('start_game') }}" method="post" class="start-form">
-
-            <div class="form-group">
-                <label>选择冒险主题</label>
-                <select name="theme" required>
-                    <option value="coffee">🍵 时间咖啡馆</option>
-                    <option value="school">🏫 校园奇遇</option>
-                    <option value="fantasy">🌟 奇幻世界</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>故事风格</label>
-                <select name="style" required>
-                    <option value="relax">🍃 轻松治愈</option>
-                    <option value="mystery">🔍 神秘悬疑</option>
-                    <option value="adventure">⚔️ 刺激冒险</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>游戏难度</label>
-                <select name="difficulty" required>
-                    <option value="easy">🌱 简单</option>
-                    <option value="normal">🌿 普通</option>
-                    <option value="hard">🌳 困难</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>自定义开场（可选）</label>
-                <textarea name="custom_intro" rows="3" placeholder="我是一名时间旅行者，正在寻找失落的记忆..."></textarea>
-            </div>
-
-            <button type="submit" class="start-button">开始冒险</button>
-        </form>
+    <div class="language-selector" style="position: absolute; top: 1rem; right: 1rem;">
+        <select id="language-select" onchange="changeLanguage(this.value)"
+            style="padding: 0.5rem; font-family: 'VT323', monospace; font-size: 1.2rem; border: 2px solid var(--border-color); background: var(--panel-bg); color: var(--text-color); cursor: pointer;">
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+        </select>
     </div>
 
-    <!-- 像素装饰 -->
-    <div class="pixel-decoration" style="margin-top: 2rem;"></div>
+    <div class="container start-page">
+
+        <!-- Title Section -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 0.5rem;">Stardew Valley Style
+            </div>
+            <h1 id="main-title"
+                style="font-size: 3.5rem; color: var(--secondary-color); text-shadow: 4px 4px 0 var(--bg-color), 6px 6px 0 rgba(0,0,0,0.2);">
+                ✧ 星露谷时光咖啡馆 ✧</h1>
+            <p id="subtitle" style="font-size: 1.2rem; color: #7a6b5d; margin-top: 1rem;">选择你喜欢的主题和风格，开启一段属于你的像素冒险。</p>
+        </div>
+
+        <!-- Settings Form -->
+        <div class="pixel-box" style="width: 100%; max-width: 500px; background: var(--panel-bg);">
+            <h2 id="settings-title"
+                style="text-align: center; margin-bottom: 1.5rem; color: var(--secondary-color); border-bottom: 2px dashed var(--primary-color); padding-bottom: 1rem;">
+                ✦ 冒险设置 ✦</h2>
+
+            <form id="start-form" onsubmit="handleStart(event)">
+                <input type="hidden" name="language" id="language-input" value="zh">
+
+                <div class="form-group">
+                    <label id="label-api-key">OpenAI API Key</label>
+                    <input type="password" name="api_key" id="input-api-key" placeholder="输入 '0611' 使用管理员测试Key，或输入你的Key"
+                        required
+                        style="width: 100%; padding: 0.5rem; font-family: 'VT323', monospace; font-size: 1.2rem; border: 2px solid var(--border-color); background: var(--bg-color); color: var(--text-color);">
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <input type="checkbox" name="enable_images" id="enable_images" checked
+                        style="width: 20px; height: 20px;">
+                    <label for="enable_images" id="label-enable-images" style="margin-bottom: 0; cursor: pointer;">生成图像
+                        (需较长时间)</label>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-theme">选择冒险主题</label>
+                    <select name="theme" id="select-theme" required>
+                        <option value="coffee">🍵 时间咖啡馆</option>
+                        <option value="school">🏫 校园奇遇</option>
+                        <option value="fantasy">🌟 奇幻世界</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-style">故事风格</label>
+                    <select name="style" id="select-style" required>
+                        <option value="relax">🍃 轻松治愈</option>
+                        <option value="mystery">🔍 神秘悬疑</option>
+                        <option value="adventure">⚔️ 刺激冒险</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-difficulty">游戏难度</label>
+                    <select name="difficulty" id="select-difficulty" required>
+                        <option value="easy">🌱 简单</option>
+                        <option value="normal">🌿 普通</option>
+                        <option value="hard">🌳 困难</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label id="label-custom-intro">自定义开场（可选）</label>
+                    <textarea name="custom_intro" id="input-custom-intro" rows="3"
+                        placeholder="我是一名时间旅行者，正在寻找失落的记忆..."></textarea>
+                </div>
+
+                <button type="submit" class="btn" id="start-btn"
+                    style="width: 100%; text-align: center; font-size: 1.5rem; padding: 1rem;">开始冒险</button>
+            </form>
+        </div>
+
+        <div style="text-align: center; color: var(--primary-color); font-size: 1.5rem; letter-spacing: 5px;">✦ ✦ ✦
+        </div>
+
+    </div>
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="modal-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="pixel-box"
+            style="background: var(--panel-bg); max-width: 400px; text-align: center; border: 4px solid var(--border-color);">
+            <h2 id="error-title" style="color: #d95763; margin-bottom: 1rem;">⚠️ 验证失败</h2>
+            <p id="error-message" style="margin-bottom: 1.5rem;">API Key 无效或测试失败。</p>
+            <button class="btn" id="error-btn" onclick="closeErrorModal()">确定</button>
+        </div>
+    </div>
 
     <script>
-        // 为下拉选项添加动画效果
-        document.addEventListener('DOMContentLoaded', function() {
-            const selects = document.querySelectorAll('select');
-            selects.forEach(select => {
-                select.addEventListener('focus', function() {
-                    this.style.transform = 'scale(1.02)';
-                    this.style.borderColor = '#8dc267';
-                });
+        const translations = {
+            zh: {
+                title: "✧ 星露谷时光咖啡馆 ✧",
+                subtitle: "选择你喜欢的主题和风格，开启一段属于你的像素冒险。",
+                settingsTitle: "✦ 冒险设置 ✦",
+                apiKeyLabel: "OpenAI API Key",
+                apiKeyPlaceholder: "使用管理员测试Key，或输入你的Key",
+                enableImagesLabel: "生成图像 (需较长时间)",
+                themeLabel: "选择冒险主题",
+                styleLabel: "故事风格",
+                difficultyLabel: "游戏难度",
+                customIntroLabel: "自定义开场（可选）",
+                customIntroPlaceholder: "我是一名时间旅行者，正在寻找失落的记忆...",
+                startBtn: "开始冒险",
+                verifying: "验证中...",
+                errorTitle: "⚠️ 验证失败",
+                errorMessage: "API Key 无效或测试失败。",
+                errorBtn: "确定",
+                themes: {
+                    coffee: "🍵 时间咖啡馆",
+                    school: "🏫 校园奇遇",
+                    fantasy: "🌟 奇幻世界"
+                },
+                styles: {
+                    relax: "🍃 轻松治愈",
+                    mystery: "🔍 神秘悬疑",
+                    adventure: "⚔️ 刺激冒险"
+                },
+                difficulties: {
+                    easy: "🌱 简单",
+                    normal: "🌿 普通",
+                    hard: "🌳 困难"
+                }
+            },
+            ja: {
+                title: "✧ スターデュー・カフェ ✧",
+                subtitle: "好きなテーマとスタイルを選んで、あなただけのピクセル冒険を始めましょう。",
+                settingsTitle: "✦ 冒険設定 ✦",
+                apiKeyLabel: "OpenAI APIキー",
+                apiKeyPlaceholder: "'管理者テストキーを使用するか、キーを入力してください",
+                enableImagesLabel: "画像を生成 (時間がかかります)",
+                themeLabel: "冒険のテーマ",
+                styleLabel: "物語のスタイル",
+                difficultyLabel: "難易度",
+                customIntroLabel: "カスタムオープニング（任意）",
+                customIntroPlaceholder: "私はタイムトラベラーで、失われた記憶を探しています...",
+                startBtn: "冒険を始める",
+                verifying: "検証中...",
+                errorTitle: "⚠️ 検証失敗",
+                errorMessage: "APIキーが無効か、テストに失敗しました。",
+                errorBtn: "確認",
+                themes: {
+                    coffee: "🍵 タイムカフェ",
+                    school: "🏫 学園の奇跡",
+                    fantasy: "🌟 ファンタジー世界"
+                },
+                styles: {
+                    relax: "🍃 リラックス",
+                    mystery: "🔍 ミステリー",
+                    adventure: "⚔️ 冒険"
+                },
+                difficulties: {
+                    easy: "🌱 簡単",
+                    normal: "🌿 普通",
+                    hard: "🌳 難しい"
+                }
+            }
+        };
 
-                select.addEventListener('blur', function() {
-                    this.style.transform = 'scale(1)';
-                    if (!this.value) {
-                        this.style.borderColor = '#7d5c38';
-                    }
-                });
+        function changeLanguage(lang) {
+            const t = translations[lang];
+            document.getElementById('main-title').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('settings-title').textContent = t.settingsTitle;
+            document.getElementById('label-api-key').textContent = t.apiKeyLabel;
+            document.getElementById('input-api-key').placeholder = t.apiKeyPlaceholder;
+            document.getElementById('label-enable-images').textContent = t.enableImagesLabel;
+            document.getElementById('label-theme').textContent = t.themeLabel;
+            document.getElementById('label-style').textContent = t.styleLabel;
+            document.getElementById('label-difficulty').textContent = t.difficultyLabel;
+            document.getElementById('label-custom-intro').textContent = t.customIntroLabel;
+            document.getElementById('input-custom-intro').placeholder = t.customIntroPlaceholder;
+            document.getElementById('start-btn').textContent = t.startBtn;
+            document.getElementById('error-title').textContent = t.errorTitle;
+            document.getElementById('error-btn').textContent = t.errorBtn;
+            document.getElementById('language-input').value = lang;
 
-                // 当选择改变时
-                select.addEventListener('change', function() {
-                    // 添加轻微的动画效果
-                    this.style.backgroundColor = '#e0d2a0';
-                    setTimeout(() => {
-                        this.style.backgroundColor = '#e9daba';
-                    }, 300);
-                });
+            // Update Select Options
+            updateSelectOptions('select-theme', t.themes);
+            updateSelectOptions('select-style', t.styles);
+            updateSelectOptions('select-difficulty', t.difficulties);
+        }
+
+        function updateSelectOptions(id, optionsMap) {
+            const select = document.getElementById(id);
+            for (let i = 0; i < select.options.length; i++) {
+                const opt = select.options[i];
+                if (optionsMap[opt.value]) {
+                    opt.textContent = optionsMap[opt.value];
+                }
+            }
+        }
+
+        // Simple animation for selects
+        document.querySelectorAll('select, textarea, input[type="password"]').forEach(el => {
+            el.addEventListener('focus', () => {
+                el.style.borderColor = 'var(--accent-color)';
+                el.style.transform = 'scale(1.02)';
             });
-
-            // 为开始按钮添加额外的动画效果
-            const startButton = document.querySelector('.start-button');
-            startButton.addEventListener('mouseover', function() {
-                this.style.letterSpacing = '2px';
-            });
-
-            startButton.addEventListener('mouseout', function() {
-                this.style.letterSpacing = '1px';
+            el.addEventListener('blur', () => {
+                el.style.borderColor = 'var(--border-color)';
+                el.style.transform = 'scale(1)';
             });
         });
-    </script>
 
+        function closeErrorModal() {
+            document.getElementById('error-modal').style.display = 'none';
+        }
+
+        async function handleStart(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const btn = document.getElementById('start-btn');
+            const originalText = btn.textContent;
+
+            btn.textContent = "验证中...";
+            btn.disabled = true;
+
+            try {
+                const response = await fetch("{{ url_for('start_game') }}", {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.href = result.redirect_url;
+                } else {
+                    document.getElementById('error-message').textContent = result.error || "API Key 验证失败，请检查后重试。";
+                    document.getElementById('error-modal').style.display = 'flex';
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('error-message').textContent = "网络错误或服务器异常。";
+                document.getElementById('error-modal').style.display = 'flex';
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
 </body>
 
 </html>
